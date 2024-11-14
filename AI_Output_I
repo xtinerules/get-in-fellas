@@ -1,0 +1,160 @@
+import React from 'react';
+import { Menu, X, Play, Pause, ShoppingCart } from 'lucide-react';
+
+const PodcastWebsite = () => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
+  const episodes = [
+    { id: 1, title: "Getting Started", duration: "45:00", date: "2024-01-01" },
+    { id: 2, title: "Interview with Expert", duration: "32:15", date: "2024-01-08" },
+    { id: 3, title: "Deep Dive", duration: "28:30", date: "2024-01-15" },
+  ];
+
+  const products = [
+    { id: 1, name: "Therapy Session Mug", price: 12.99 },
+    { id: 2, name: "Get in Fellas T-Shirt", price: 19.99 },
+    { id: 3, name: "Podcast Logo Sticker", price: 3.99 },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-r from-yellow-300 to-orange-400">
+      {/* Navbar */}
+      <nav className="bg-yellow-500 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-bold">Get In Fellas, We're Going to Therapy!</h1>
+            </div>
+            
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+            
+            {/* Desktop menu */}
+            <div className="hidden md:flex space-x-4">
+              <a href="#" className="hover:text-gray-200">Episodes</a>
+              <a href="#" className="hover:text-gray-200">Store</a>
+              <a href="#" className="hover:text-gray-200">About</a>
+              <a href="#" className="hover:text-gray-200">Contact</a>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <a href="#" className="block px-3 py-2 hover:bg-yellow-600">Episodes</a>
+              <a href="#" className="block px-3 py-2 hover:bg-yellow-600">Store</a>
+              <a href="#" className="block px-3 py-2 hover:bg-yellow-600">About</a>
+              <a href="#" className="block px-3 py-2 hover:bg-yellow-600">Contact</a>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <div className="bg-yellow-500 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="relative h-64 sm:h-80 md:h-96">
+            <img
+              className="absolute inset-0 w-full h-full object-cover rounded-lg"
+              src="/api/placeholder/800/450"
+              alt="Podcast Cover Art"
+            />
+            <div className="absolute inset-0 bg-yellow-500 bg-opacity-75 rounded-lg" />
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <img
+                src="/api/placeholder/400/300"
+                alt="Get In Fellas, We're Going to Therapy!"
+                className="w-48 h-48 object-contain mb-4"
+              />
+              <h2 className="text-4xl font-bold mb-2">Get In Fellas, We're Going to Therapy!</h2>
+              <p className="text-xl">With Dr. Steven Solomon</p>
+              <p className="text-lg mt-4">Available on Apple Podcasts</p>
+              <a
+                href="https://podcasts.apple.com/us/podcast/get-in-fellas-were-going-to-therapy/id1752963640"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 px-4 py-2 bg-white text-yellow-500 rounded-full hover:bg-gray-200"
+              >
+                Listen on Apple Podcasts
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Episodes List */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <h3 className="text-2xl font-bold mb-6 text-yellow-500">Latest Episodes</h3>
+        <div className="space-y-4">
+          {episodes.map((episode) => (
+            <div key={episode.id} className="bg-white p-6 rounded-lg shadow-md">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-xl font-semibold text-yellow-500">{episode.title}</h4>
+                  <p className="text-gray-600">
+                    {episode.duration} • {episode.date}
+                  </p>
+                </div>
+                <button 
+                  className="p-2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                >
+                  {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Store Section */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <h3 className="text-2xl font-bold mb-6 text-yellow-500">Podcast Merch</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {products.map((product) => (
+            <div key={product.id} className="bg-white p-6 rounded-lg shadow-md">
+              <img
+                className="w-full h-40 object-cover rounded-t-lg"
+                src="/api/placeholder/400/300"
+                alt={product.name}
+              />
+              <div className="mt-4">
+                <h4 className="text-xl font-semibold text-yellow-500">{product.name}</h4>
+                <p className="text-gray-600 font-bold">${product.price.toFixed(2)}</p>
+                <button className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600">
+                  <ShoppingCart size={18} className="inline-block mr-2" /> Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Player Bar */}
+      <div className="fixed bottom-0 w-full bg-white border-t shadow-lg p-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div>
+            <p className="font-semibold text-yellow-500">Now Playing</p>
+            <p className="text-gray-600">Episode Title</p>
+          </div>
+          <button 
+            className="p-3 rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
+            onClick={() => setIsPlaying(!isPlaying)}
+          >
+            {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PodcastWebsite;
