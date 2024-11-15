@@ -1,0 +1,191 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { PlayCircle, PauseCircle, SkipForward, SkipBack, Volume2 } from 'lucide-react';
+
+const PodcastWebsite = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [activeEpisode, setActiveEpisode] = useState(null);
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const audioRef = useRef(null);
+  const containerRef = useRef(null);
+
+  // Smooth scroll implementation
+  const scrollToSection = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Audio player controls
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  // Contact form handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add your form submission logic here
+    console.log('Form submitted:', formData);
+    setFormData({ name: '', email: '', message: '' });
+    setShowContactForm(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50" ref={containerRef}>
+      {/* Navigation */}
+      <nav className={`bg-white shadow-lg fixed w-full top-0 z-50 transition-all duration-300 ${isNavOpen ? 'h-screen' : 'h-16'}`}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex justify-between items-center h-16">
+            <div className="text-xl font-bold text-gray-800">Bromotions</div>
+            <button
+              className="md:hidden"
+              onClick={() => setIsNavOpen(!isNavOpen)}
+            >
+              {isNavOpen ? 'Close' : 'Menu'}
+            </button>
+            <div className="hidden md:flex space-x-4">
+              {['Home', 'Shop', 'Podcast', 'Contact'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => scrollToSection(item.toLowerCase())}
+                  className="px-3 py-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+          {isNavOpen && (
+            <div className="md:hidden space-y-4 py-4">
+              {['Home', 'Shop', 'Podcast', 'Contact'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    scrollToSection(item.toLowerCase());
+                    setIsNavOpen(false);
+                  }}
+                  className="block px-3 py-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="home" className="pt-20 pb-12 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
+              Get In Fellas, We're Going To Therapy
+            </h1>
+            <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl">
+              Join Dr. Steven Solomon as he helps fellow bros explore mental health and personal growth.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Shop Section */}
+      <section id="shop" className="py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Visit Our Shop</h2>
+          <div className="row row-cols-1 row-cols-md-3 g-4">
+            <div className="col">
+              <div className="card h-100 shadow-sm">
+                <img src="https://via.placeholder.com/300x200" className="card-img-top" alt="Product 1" />
+                <div className="card-body">
+                  <h5 className="card-title">Get In Fellas Hoodie</h5>
+                  <p className="card-text">Stay cozy in our signature podcast hoodie.</p>
+                  <a href="#" className="btn btn-primary">Buy Now - $49.99</a>
+                </div>
+              </div>
+            </div>
+            {/* Add more product cards here */}
+          </div>
+        </div>
+      </section>
+
+      {/* Podcast Section */}
+      <section id="podcast" className="py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Listen to the Podcast</h2>
+          <div className="ratio ratio-16x9 bg-light rounded shadow-sm">
+            <iframe src="https://open.spotify.com/embed/show/2eYBihRn5SkLXbai9sIZFf" title="Get In Fellas Podcast" allowFullScreen></iframe>
+          </div>
+          <div className="mt-4 flex items-center justify-center space-x-4">
+            <button onClick={togglePlay}>
+              {isPlaying ? (
+                <PauseCircle className="h-10 w-10 text-blue-600" />
+              ) : (
+                <PlayCircle className="h-10 w-10 text-blue-600" />
+              )}
+            </button>
+            <SkipBack className="h-6 w-6" />
+            <SkipForward className="h-6 w-6" />
+            <Volume2 className="h-6 w-6" />
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-12 bg-gray-50">
+        <div className="max-w-md mx-auto px-4">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Contact Us</h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Message</label>
+              <textarea
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                rows={4}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Send Message
+            </Button>
+          </form>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default PodcastWebsite;
